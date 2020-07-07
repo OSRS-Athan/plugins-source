@@ -8,23 +8,11 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("Socket Party")
 public interface PartyConfig extends Config
 {
-
-	@ConfigItem(
-		position = 0,
-		keyName = "mirrorMode",
-		name = "Mirror Mode Compatibility?",
-		description = "Should we show the overlay on Mirror Mode?"
-	)
-	default boolean mirrorMode()
-	{
-		return false;
-	}
-
 	@ConfigItem(
 		position = 1,
 		keyName = "getTileColor",
-		name = "Tile Color",
-		description = "The color of the tiles."
+		name = "Ping Tile Color",
+		description = "The color of your ping tile."
 	)
 	default Color getTileColor()
 	{
@@ -34,8 +22,8 @@ public interface PartyConfig extends Config
 	@ConfigItem(
 		position = 2,
 		keyName = "getTileTransparency",
-		name = "Tile Transparency",
-		description = "The color transparency of the tiles. Ranges from 0 to 255, inclusive."
+		name = "Ping Tile Transparency",
+		description = "The color transparency of your ping tile. Ranges from 0 to 255, inclusive."
 	)
 	default int getTileTransparency()
 	{
@@ -45,8 +33,8 @@ public interface PartyConfig extends Config
 	@ConfigItem(
 		position = 3,
 		keyName = "getTileOutline",
-		name = "Tile Outline Color",
-		description = "The color of the outline of the tiles."
+		name = "Ping Tile Outline Color",
+		description = "The color of the outline of your ping tile."
 	)
 	default Color getTileOutline()
 	{
@@ -56,11 +44,22 @@ public interface PartyConfig extends Config
 	@ConfigItem(
 		position = 4,
 		keyName = "getTileOutlineSize",
-		name = "Tile Outline Size",
-		description = "The size of the outline of the tiles."
+		name = "Ping Tile Outline Size",
+		description = "The size of the outline of your ping tile."
 	)
 	default int getTileOutlineSize()
 	{
 		return 1;
+	}
+
+	@ConfigItem(
+			position = 5,
+			keyName = "getTileDuration",
+			name = "Ping Tile Duration",
+			description = "The duration of pings in game ticks"
+	)
+	default int getTileDuration()
+	{
+		return 6;
 	}
 }

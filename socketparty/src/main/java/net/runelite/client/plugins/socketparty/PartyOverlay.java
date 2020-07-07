@@ -37,48 +37,38 @@ public class PartyOverlay extends Overlay
 
 	private void determineLayer()
 	{
-		if (config.mirrorMode())
-		{
-			setLayer(OverlayLayer.AFTER_MIRROR);
-		}
-		else
-		{
-			setLayer(OverlayLayer.ABOVE_SCENE);
-		}
+		setLayer(OverlayLayer.ABOVE_SCENE);
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.isSotetsegActive())
+		for (final TilePing next : plugin.getPings())
 		{
-			for (final WorldPoint next : plugin.getMazePings())
+			final LocalPoint localPoint = LocalPoint.fromWorld(client, next.getWorldPoint());
+			if (localPoint != null)
 			{
-				final LocalPoint localPoint = LocalPoint.fromWorld(client, next);
-				if (localPoint != null)
+				Polygon poly = Perspective.getCanvasTilePoly(client, localPoint);
+				if (poly == null)
 				{
-					Polygon poly = Perspective.getCanvasTilePoly(client, localPoint);
-					if (poly == null)
-					{
-						continue;
-					}
-
-					Color color = config.getTileOutline();
-					graphics.setColor(color);
-
-					Stroke originalStroke = graphics.getStroke();
-					int strokeSize = Math.max(config.getTileOutlineSize(), 1);
-					graphics.setStroke(new BasicStroke(strokeSize));
-					graphics.draw(poly);
-
-					Color fill = config.getTileColor();
-					int alpha = Math.min(Math.max(config.getTileTransparency(), 0), 255);
-					Color realFill = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), alpha);
-					graphics.setColor(realFill);
-					graphics.fill(poly);
-
-					graphics.setStroke(originalStroke);
+					continue;
 				}
+
+				Color color = next.getOutline();
+				graphics.setColor(color);
+
+				Stroke originalStroke = graphics.getStroke();
+				int strokeSize = Math.max(next.getOutlineSize(), 1);
+				graphics.setStroke(new BasicStroke(strokeSize));
+				graphics.draw(poly);
+
+				Color fill = next.getColor();
+				int alpha = Math.min(Math.max(next.getTransparency(), 0), 255);
+				Color realFill = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), alpha);
+				graphics.setColor(realFill);
+				graphics.fill(poly);
+
+				graphics.setStroke(originalStroke);
 			}
 		}
 

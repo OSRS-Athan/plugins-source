@@ -1,6 +1,6 @@
 import ProjectVersions.rlVersion
 
-version = "0.0.1"
+version = "0.0.6"
 
 project.extra["PluginName"] = "Socket Party"
 project.extra["PluginDescription"] = "Party plugin using sockets"

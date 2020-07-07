@@ -20,8 +20,8 @@ allprojects {
 subprojects {
     group = "com.openosrs.externals"
 
-    project.extra["PluginProvider"] = "xKylee"
-    project.extra["ProjectUrl"] = "https://discord.gg/ARcwsJr"
+    project.extra["PluginProvider"] = "OSRS-Athan"
+    project.extra["ProjectUrl"] = "https://github.com/OSRS-Athan/plugins-source"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 
     repositories {
