@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
@@ -17,6 +18,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -27,6 +29,7 @@ import net.runelite.client.plugins.socket.org.json.JSONObject;
 import net.runelite.client.plugins.socket.packet.SocketBroadcastPacket;
 import net.runelite.client.plugins.socket.packet.SocketReceivePacket;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
 
 @Extension
@@ -40,7 +43,6 @@ import org.pf4j.Extension;
 @PluginDependency(SocketPlugin.class)
 public class PartyPlugin extends Plugin
 {
-
 	@Inject
 	private Client client;
 
@@ -55,6 +57,9 @@ public class PartyPlugin extends Plugin
 
 	@Inject
 	private PluginManager pluginManager;
+
+	@Inject
+	private KeyManager keyManager;
 
 	@Inject
 	private SocketPlugin socketPlugin;
@@ -74,17 +79,21 @@ public class PartyPlugin extends Plugin
 	@Getter(AccessLevel.PUBLIC)
 	private Set<TilePing> pings;
 
+	@Setter(AccessLevel.PRIVATE)
+	private boolean hotkeyActive;
+
 	@Override
 	protected void startUp()
 	{
+		keyManager.registerKeyListener(hotkey);
 		pings = Collections.synchronizedSet(new HashSet<>());
-
 		overlayManager.add(overlay);
 	}
 
 	@Override
 	protected void shutDown()
 	{
+		keyManager.unregisterKeyListener(hotkey);
 		overlayManager.remove(overlay);
 	}
 
@@ -101,7 +110,7 @@ public class PartyPlugin extends Plugin
 	@Subscribe
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
+		if (!hotkeyActive)
 		{
 			return;
 		}
@@ -190,4 +199,19 @@ public class PartyPlugin extends Plugin
 			e.printStackTrace();
 		}
 	}
+
+	private final HotkeyListener hotkey = new HotkeyListener(() -> config.getHotKey())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			setHotkeyActive(true);
+		}
+
+		@Override
+		public void hotkeyReleased()
+		{
+			setHotkeyActive(false);
+		}
+	};
 }

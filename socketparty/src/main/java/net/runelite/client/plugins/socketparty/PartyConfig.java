@@ -4,10 +4,22 @@ import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.Keybind;
 
 @ConfigGroup("Socket Party")
 public interface PartyConfig extends Config
 {
+	@ConfigItem(
+		position = 0,
+		keyName = "pingHotkey",
+		name = "Hotkey for Pings",
+		description = "Set this hotkey to use your ping."
+	)
+	default Keybind getHotKey()
+	{
+		return Keybind.SHIFT;
+	}
+
 	@ConfigItem(
 		position = 1,
 		keyName = "getTileColor",
